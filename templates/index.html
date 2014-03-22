@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="/static/css/main.css"/>
+</head>
+<body>
+    <form method=post action="/process-form" ng-controller="FormCtrl" class="form">
+        <p class="input_block">
+            <label for="name_field" class="input_block__label"></label>
+            <div ng-show="name_error" class="input_block__error_msg">{{ name_error_message }}</div>
+            <input ng-model="name" ng-change="validateName()"
+                   ng-class="{'input_block__input--error': name_error == true}"
+                   class="input_block__input" name="name" placeholder="Name" type="text" id="name_field"/>
+        </p>
+        <p class="input_block">
+            <label for="alias_field" class="input_block__label"></label>
+            <div ng-show="alias_error" class="input_block__error_msg">{{ alias_error_message }}</div>
+            <input ng-model="alias" ng-change="validateAlias()"
+                   ng-class="{'input_block__input--error': alias_error == true}"
+                   class="input_block__input" name="alias" placeholder="Alias" type="text" id="alias_field"/>
+            <span ng-show="alias_http_stream.waiting()">checking...</span>
+        </p>
+        <p><input type=submit value=Send></p>
+
+        <table>
+            <tr><td>name:</td><td>{{ name }}</td></tr>
+            <tr><td>name_error:</td><td>{{ name_error }}</td></tr>
+            <tr><td>name_error_message:</td><td>{{ name_error_message }}</td></tr>
+            <tr><td>alias:</td><td>{{ alias }}</td></tr>
+            <tr><td>alias_error:</td><td>{{ alias_error }}</td></tr>
+            <tr><td>alias_error_message:</td><td>{{ alias_error_message }}</td></tr>
+        </table>
+    </form>
+    <script src="/static/bower_components/angular/angular.js"></script>
+    <script src="/static/js/myapp.js"></script>
+</body>
+</html>
