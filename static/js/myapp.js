@@ -1,6 +1,6 @@
 var myApp = angular.module('myApp', []);
 
-myApp.controller('FormCtrl', function ($scope, Stream) {
+myApp.controller('FormCtrl', function ($scope, StreamService) {
     var $s = $scope, self = this;
 
     $s.name = '';
@@ -10,7 +10,7 @@ myApp.controller('FormCtrl', function ($scope, Stream) {
     $s.name_error_message = '';
     $s.alias_error_message = '';
 
-    $s.alias_http_stream = Stream.instance();
+    $s.alias_http_stream = StreamService.instance();
 
     $s.validateName = function () {
         $s.name_error = false;
@@ -53,7 +53,7 @@ myApp.controller('FormCtrl', function ($scope, Stream) {
 });
 
 
-myApp.factory('Stream', function($http, $q) {
+myApp.factory('StreamService', function($http, $q) {
 
     return {
         instance: function() {

@@ -80,8 +80,8 @@ describe("Stream service", function () {
 
     beforeEach(module("myApp"));
 
-    beforeEach(inject(function(Stream, $injector) {
-        stream = Stream.instance();
+    beforeEach(inject(function(StreamService, $injector) {
+        stream = StreamService.instance();
         injector = $injector;
     }));
 
