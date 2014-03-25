@@ -75,17 +75,49 @@ describe("FormCtrl", function() {
     });
 });
 
-describe("Stream service", function () {
-    var injector, stream;
+describe("StreamService", function () {
+    var stream, $httpBackend;
 
     beforeEach(module("myApp"));
 
     beforeEach(inject(function(StreamService, $injector) {
         stream = StreamService.instance();
-        injector = $injector;
+        $httpBackend = $injector.get('$httpBackend');
     }));
 
-    it("", function () {
+    it("on successful response delivers response data", function () {
+        var spy = jasmine.createSpy();
 
+        $httpBackend.expectGET('/some/url').respond(200, "some data");
+        stream.request('/some/url').then(spy);
+        $httpBackend.flush();
+
+        expect(spy).toHaveBeenCalledWith("some data");
+    });
+
+    it("subsequent request cancels previous one", function () {
+        var spy1 = jasmine.createSpy(),
+            spy2 = jasmine.createSpy();
+
+        $httpBackend.when('GET', '/some/url').respond(200, "some data");
+
+        stream.request('/some/url').then(spy1, spy2);
+        stream.request('/some/url');
+        $httpBackend.flush();
+
+        expect(spy1).not.toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalledWith("__cancelled__");
+    });
+
+    it("subsequent request works as expected", function () {
+        var spy = jasmine.createSpy();
+
+        $httpBackend.when('GET', '/some/url').respond(200, "some data");
+
+        stream.request('/some/url');
+        stream.request('/some/url').then(spy);
+        $httpBackend.flush();
+
+        expect(spy).toHaveBeenCalledWith("some data");
     });
 });

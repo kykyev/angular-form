@@ -76,9 +76,12 @@ myApp.factory('StreamService', function($http, $q) {
             _request_canceler.resolve();
             _request_canceler = $q.defer();
 
-            $http.get(url, {timeout: _request_canceler.promise})
-                .success(function(data) { def.resolve(data); })
-                .error(function(err) { def.reject(err); })
+            wrapHttp(url, _request_canceler.promise)
+                .then(function(data) {
+                    def.resolve(data);
+                }, function(err) {
+                    def.reject(err);
+                })
                 .finally(function () {
                     _count -= 1;
                     if ( _count === 0 ) {
@@ -88,5 +91,20 @@ myApp.factory('StreamService', function($http, $q) {
 
             return def.promise;
         };
+
+        function wrapHttp(url, canceler) {
+            var def = $q.defer();
+
+            $http.get(url)
+                .success(function(data) { def.resolve(data); })
+                .error(function(err) { def.reject(err); });
+
+            canceler.then(function () {
+                def.reject("__cancelled__");
+            });
+
+            return def.promise;
+        }
+
     }
 });
