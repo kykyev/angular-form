@@ -1,4 +1,8 @@
+/*global jasmine, describe, it, before, beforeEach, after, afterEach, expect, module, inject */
+
 describe("FormCtrl", function() {
+    "use strict";
+
     var scope, ctrl, injector;
 
     beforeEach(module("myApp"));
@@ -66,7 +70,7 @@ describe("FormCtrl", function() {
             var defer = injector.get('$q').defer();
             ctrl.validateAliasRemote(defer.promise);
             defer.resolve({found: true});
-            scope.$digest()
+            scope.$digest();
             // explain why $digest is needed
             expect(scope.alias_error).toBe(true);
             expect(scope.alias_error_message)
@@ -76,6 +80,8 @@ describe("FormCtrl", function() {
 });
 
 describe("StreamService", function () {
+    "use strict";
+
     var stream, $httpBackend;
 
     beforeEach(module("myApp"));

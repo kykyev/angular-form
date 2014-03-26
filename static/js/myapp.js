@@ -1,96 +1,62 @@
-var myApp = angular.module('myApp', []);
+(function(angular) {
+    "use strict";
 
-myApp.controller('FormCtrl', function ($scope, StreamService) {
-    var $s = $scope, self = this;
+    var myApp = angular.module('myApp', []);
 
-    $s.name = '';
-    $s.alias = '';
-    $s.name_error = false;
-    $s.alias_error = false;
-    $s.name_error_message = '';
-    $s.alias_error_message = '';
+    myApp.controller('FormCtrl', function ($scope, StreamService) {
+        var $s = $scope, self = this;
 
-    $s.alias_http_stream = StreamService.instance();
-
-    $s.validateName = function () {
+        $s.name = '';
+        $s.alias = '';
         $s.name_error = false;
-        $s.name_error_message = '';
-
-        if ($s.name.length < 5) {
-            $s.name_error = true;
-            $s.name_error_message = "Name should have at least 5 characters";
-        }
-    };
-
-    $s.validateAlias = function () {
-        self.validateAliasLocally();
-        if (!$s.alias_error) {
-            self.validateAliasRemote(
-                $s.alias_http_stream.request('/alias/' + $s.alias));
-        }
-    };
-
-    self.validateAliasLocally = function () {
         $s.alias_error = false;
+        $s.name_error_message = '';
         $s.alias_error_message = '';
 
-        if ($s.alias.length < 4) {
-            $s.alias_error = true;
-            $s.alias_error_message = "Alias should have at least 4 characters";
-        }
-    };
+        $s.alias_http_stream = StreamService.instance();
 
-    self.validateAliasRemote = function (promise) {
-        promise.then(
-            function (data) {
-                if ( data.found ) {
-                    $s.alias_error = true;
-                    $s.alias_error_message = "Someone already has the same alias";
-                }
-            }, function (err) {}
-        );
-    }
-});
+        $s.validateName = function () {
+            $s.name_error = false;
+            $s.name_error_message = '';
 
-
-myApp.factory('StreamService', function($http, $q) {
-
-    return {
-        instance: function() {
-            return new Constructor();
-        }
-    };
-
-    function Constructor() {
-        var _request_canceler = $q.defer(),
-            _count = 0,
-            _pending = false;
-
-        this.waiting = function() { return _pending; };
-
-        this.request = function (url) {
-            var def = $q.defer();
-
-            _count += 1;
-            _pending = true;
-            _request_canceler.resolve();
-            _request_canceler = $q.defer();
-
-            wrapHttp(url, _request_canceler.promise)
-                .then(function(data) {
-                    def.resolve(data);
-                }, function(err) {
-                    def.reject(err);
-                })
-                .finally(function () {
-                    _count -= 1;
-                    if ( _count === 0 ) {
-                        _pending = false;
-                    }
-                });
-
-            return def.promise;
+            if ($s.name.length < 5) {
+                $s.name_error = true;
+                $s.name_error_message = "Name should have at least 5 characters";
+            }
         };
+
+        $s.validateAlias = function () {
+            self.validateAliasLocally();
+            if (!$s.alias_error) {
+                self.validateAliasRemote(
+                    $s.alias_http_stream.request('/alias/' + $s.alias));
+            }
+        };
+
+        self.validateAliasLocally = function () {
+            $s.alias_error = false;
+            $s.alias_error_message = '';
+
+            if ($s.alias.length < 4) {
+                $s.alias_error = true;
+                $s.alias_error_message = "Alias should have at least 4 characters";
+            }
+        };
+
+        self.validateAliasRemote = function (promise) {
+            promise.then(
+                function (data) {
+                    if ( data.found ) {
+                        $s.alias_error = true;
+                        $s.alias_error_message = "Someone already has the same alias";
+                    }
+                }, function (err) {}
+            );
+        };
+    });
+
+
+    myApp.factory('StreamService', function($http, $q) {
 
         function wrapHttp(url, canceler) {
             var def = $q.defer();
@@ -106,5 +72,43 @@ myApp.factory('StreamService', function($http, $q) {
             return def.promise;
         }
 
-    }
-});
+        function Constructor() {
+            var _request_canceler = $q.defer(),
+                _count = 0,
+                _pending = false;
+
+            this.waiting = function() { return _pending; };
+
+            this.request = function (url) {
+                var def = $q.defer();
+
+                _count += 1;
+                _pending = true;
+                _request_canceler.resolve();
+                _request_canceler = $q.defer();
+
+                wrapHttp(url, _request_canceler.promise)
+                    .then(function(data) {
+                        def.resolve(data);
+                    }, function(err) {
+                        def.reject(err);
+                    })
+                    .finally(function () {
+                        _count -= 1;
+                        if ( _count === 0 ) {
+                            _pending = false;
+                        }
+                    });
+
+                return def.promise;
+            };
+        }
+
+        return {
+            instance: function() {
+                return new Constructor();
+            }
+        };
+    });
+
+})(window.angular);
