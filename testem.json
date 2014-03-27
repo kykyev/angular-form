@@ -1,0 +1,10 @@
+{
+    "framework": "jasmine",
+    "src_files": [
+        "static/bower_components/angular/angular.js",
+        "static/bower_components/angular-mocks/angular-mocks.js",
+        "static/js/**/*.js",
+        "static/test/**/*.js"
+    ],
+    "launch_in_dev": ["Chrome", "Firefox"]
+}
