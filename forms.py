@@ -32,6 +32,7 @@ def process_form():
     form = HeroForm(request.form)
     form.validate()
 
+
 @app.route('/alias/<alias>')
 def get_alias(alias):
     time.sleep(1)
@@ -39,6 +40,7 @@ def get_alias(alias):
         return jsonify(alias=alias, found=True)
     else:
         return jsonify(alias=alias, found=False)
+
 
 class HeroForm(Form):
     name = StringField('Superhero Name', [validators.InputRequired()])
