@@ -12,6 +12,10 @@
   ],
   "dependencies": {
     "angular-mocks": "~1.2.14",
-    "angular": "~1.2.14"
+    "angular": "~1.2.14",
+    "foundation": "~5.2.1"
+  },
+  "devDependencies": {
+    "lodash": "~2.4.1"
   }
 }
