@@ -30,6 +30,6 @@ Styling
 
 Starting from version 5 Zurb Foundation framework is distributed as Bower component. In Compass config file insert this and you are done:
 
-```
+```ruby
 add_import_path "./static/bower_components/foundation/scss"
 ```
