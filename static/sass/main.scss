@@ -1,22 +1,25 @@
+@import "normalize";
+
+@import "foundation/components/forms";
+@import "foundation/components/grid";
+@import "foundation/components/tables";
 
 
 .l-wrapper {
-  margin: 0 20px;
+  margin: 20px 30px;
+  max-width: 600px;
 }
 
-.form {
-  width: 300px;
-  margin: 0 auto;
+.demoform-field {
+  position: relative;
 }
 
-.input_block {
-  padding: 10px 0;
-}
-
-.input_block__input--error {
-  border: 3px solid red;
-}
-
-.input_block__error_msg {
-  color: red;
+.demoform-field_message {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  background: #c0c0c0;
+  padding: 0 3px;
+  opacity: 0.7;
+  font-size: 0.8em;
 }
