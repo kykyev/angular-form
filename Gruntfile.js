@@ -4,16 +4,16 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         // tasks
         compass: {
-            dev: {
+            naive: {
                 options: {
-                    config: 'compass.conf.rb'
+                    config: 'static/naive/compass.rb'
                 }
             }
         },
         watch: {
-            sass: {
-                files: './static/sass/**/*.scss',
-                tasks: ['compass:dev']
+            sass_naive: {
+                files: 'static/naive/sass/**/*.scss',
+                tasks: ['compass:naive']
             },
             source: {
                 files: ['static/**', '!static/bower_components/**',
