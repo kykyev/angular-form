@@ -5,3 +5,7 @@ static/css/
 .idea/
 .sass-cache/
 __pycache__/
+
+# firefox leaves file with name
+# C:\nppdf32Log\debuglog.txt
+C*nppdf32Log*debuglog.txt
