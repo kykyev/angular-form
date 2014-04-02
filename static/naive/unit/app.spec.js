@@ -13,19 +13,26 @@ describe("FormCtrl", function() {
         injector = $injector;
     }));
 
-    it("initial fields values are empty strings", function() {
-        expect(scope.name).toEqual('');
-        expect(scope.alias).toEqual('');
-    });
+    describe("form initial state", function () {
+        it("initial fields values are empty strings", function() {
+            expect(scope.name).toEqual('');
+            expect(scope.alias).toEqual('');
+        });
 
-    it("initially should not be fields error", function() {
-        expect(scope.name_error).toBe(false);
-        expect(scope.alias_error).toBe(false);
-    });
+        it("initially should not be fields error", function() {
+            expect(scope.name_error).toBe(false);
+            expect(scope.alias_error).toBe(false);
+        });
 
-    it("initially should not be error messages", function() {
-        expect(scope.name_error_message).toEqual('');
-        expect(scope.alias_error_message).toEqual('');
+        it("initially should not be error messages", function() {
+            expect(scope.name_error_message).toEqual('');
+            expect(scope.alias_error_message).toEqual('');
+        });
+
+        it("initially fileds are pristine", function () {
+            expect(scope.name_pristine).toBe(true);
+            expect(scope.alias_pristine).toBe(true);
+        });
     });
 
     describe("name validation", function() {
@@ -101,18 +108,30 @@ describe("StreamService", function () {
         expect(spy).toHaveBeenCalledWith("some data");
     });
 
-    it("subsequent request cancels previous one", function () {
+    it("if response fails error callback is invoked", function () {
+        var spy = jasmine.createSpy();
+
+        $httpBackend.expectGET('/some/url').respond(500, "timeout");
+        stream.request('/some/url').then(function() {}, spy);
+        $httpBackend.flush();
+
+        expect(spy).toHaveBeenCalledWith("timeout");
+    });
+
+    it("if second request fired while first request is pending then first one is forgotten", function () {
         var spy1 = jasmine.createSpy(),
-            spy2 = jasmine.createSpy();
+            spy2 = jasmine.createSpy(),
+            spy3 = jasmine.createSpy();
 
         $httpBackend.when('GET', '/some/url').respond(200, "some data");
 
         stream.request('/some/url').then(spy1, spy2);
-        stream.request('/some/url');
+        stream.request('/some/url').then(spy3);
         $httpBackend.flush();
 
         expect(spy1).not.toHaveBeenCalled();
-        expect(spy2).toHaveBeenCalledWith("__cancelled__");
+        expect(spy2).not.toHaveBeenCalled();
+        expect(spy3).toHaveBeenCalledWith("some data");
     });
 
     it("subsequent request works as expected", function () {
