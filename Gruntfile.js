@@ -16,8 +16,8 @@ module.exports = function(grunt) {
                 tasks: ['compass:naive']
             },
             source: {
-                files: ['static/**', '!static/bower_components/**',
-                        'templates/**', 'forms.py'],
+                files: ['static/naive/**/*.{js,scss,html}',
+                        'forms.py'],
                 options: {
                     livereload: true
                 }
