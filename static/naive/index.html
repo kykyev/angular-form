@@ -6,7 +6,7 @@
 </head>
 <body>
   <div class="l-wrapper">
-    <form ng-controller="FormCtrl" class="demoform" novalidate>
+    <form ng-controller="FormCtrl" ng-submit="submit()" class="demoform" novalidate>
 
       <div class="row">
         <div class="column small-12">
@@ -26,7 +26,7 @@
                    ng-class="{error: alias_error == true}"
                    name="alias" placeholder="Alias" type="text" id="alias_field"/>
             <span class="demoform-field_message"
-                  ng-show="alias_http_stream.waiting()">checking...</span>
+                  ng-show="alias_validating_now">checking...</span>
           </label>
           <small ng-show="alias_error" class="error">{{ alias_error_message }}</small>
         </div>
@@ -34,7 +34,7 @@
 
       <div class="row">
         <div class="small-12 column">
-          <input type=submit value=Send class="button">
+          <input ng-disabled="!is_valid()" type=submit value=Send class="button">
         </div>
       </div>
 
@@ -44,9 +44,15 @@
             <tr><td>name</td><td>{{ name }}</td></tr>
             <tr><td>name_error:</td><td>{{ name_error }}</td></tr>
             <tr><td>name_error_message:</td><td>{{ name_error_message }}</td></tr>
+            <tr><td>name_pristine:</td><td>{{ name_pristine }}</td></tr>
+            <tr><td>name is valid:</td><td>{{ name_is_valid() }}</td></tr>
             <tr><td>alias:</td><td>{{ alias }}</td></tr>
             <tr><td>alias_error:</td><td>{{ alias_error }}</td></tr>
             <tr><td>alias_error_message:</td><td>{{ alias_error_message }}</td></tr>
+            <tr><td>alias_pristine:</td><td>{{ alias_pristine }}</td></tr>
+            <tr><td>alias validating...:</td><td>{{ alias_validating_now }}</td></tr>
+            <tr><td>alias is valid:</td><td>{{ alias_is_valid() }}</td></tr>
+            <tr><td>form is valid:</td><td>{{ is_valid() }}</td></tr>
           </table>
         </div>
       </div>
