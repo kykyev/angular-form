@@ -24,7 +24,7 @@ app = MyFlask(__name__)
 
 @app.route('/', methods=['GET'])
 def hello_world():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 @app.route('/process-form', methods=['POST'])
