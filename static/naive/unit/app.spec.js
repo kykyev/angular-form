@@ -97,11 +97,7 @@ describe("FormCtrl", function() {
 
     describe("alias validation", function () {
         it("call to /api/hero/find-by-alias/{{alias}}", function () {
-            var promise = jasmine.createSpyObj('promise', ['then']);
-            promise.then.andCallFake(function() {
-                return jasmine.createSpyObj('promise', ['finally']);
-            });
-            spyOn(scope.alias_http_stream, 'request').andReturn(promise);
+            spyOn(scope.alias_http_stream, 'request').andCallThrough();
             scope.alias = 'batman';
             scope.validateAlias();
             expect(scope.alias_http_stream.request)
