@@ -2,9 +2,11 @@
 
 "use strict";
 
-angular.module('myApp', ['myApp.services']);
+angular.module('myApp', ['myApp.services', 'myApp.constants']);
 
-angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) {
+angular.module('myApp').controller('FormCtrl',
+    ['$scope', 'StreamService', 'I18N.MESSAGES', 'URLS', function ($scope, StreamService, i18nmessages, URLS) {
+
     var $s = $scope, self = this;
 
     $s.name = '';
@@ -39,7 +41,7 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
 
         if ($s.name.length < 5) {
             $s.name_error = true;
-            $s.name_error_message = "Name should have at least 5 characters";
+            $s.name_error_message = i18nmessages['error.validation.name.too_short']();
         } else {
             $s.name_error = false;
         }
@@ -52,7 +54,7 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
         self.validateAliasLocally();
         if (!$s.alias_error) {
             self.validateAliasRemote(
-                $s.alias_http_stream.request('/api/hero/find-by-alias/' + $s.alias));
+                $s.alias_http_stream.request(URLS['hero.find.by.alias']({alias: $s.alias})));
         } else {
             $s.alias_validating_now = false;
         }
@@ -61,7 +63,7 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
     self.validateAliasLocally = function () {
         if ($s.alias.length < 4) {
             $s.alias_error = true;
-            $s.alias_error_message = "Alias should have at least 4 characters";
+            $s.alias_error_message = i18nmessages['error.validation.alias.too_short']();
         } else {
             $s.alias_error = false;
         }
@@ -72,14 +74,14 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
             function (data) {
                 if ( data.found ) {
                     $s.alias_error = true;
-                    $s.alias_error_message = "Someone already has the same alias";
+                    $s.alias_error_message = i18nmessages['error.validation.alias.duplicate']();
                 } else {
                     $s.alias_error = false;
                 }
             }, function (err) {
                 $s.alias_error = true;
                 if (err.errcode === 500) {
-                    $s.alias_error_message = "Something wrong with the server";
+                    $s.alias_error_message = i18nmessages['error.validation.alias.server500']();
                 } else {
                     $s.alias_error_message = "Server error: " + err.errcode;
                 }
@@ -88,6 +90,6 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
             $s.alias_validating_now = false;
         });
     };
-});
+}]);
 
 
