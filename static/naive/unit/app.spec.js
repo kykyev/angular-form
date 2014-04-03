@@ -83,5 +83,15 @@ describe("FormCtrl", function() {
             expect(scope.alias_error_message)
                 .toEqual('Someone already has the same alias');
         });
+
+        it("500 server error", function () {
+            var defer = injector.get('$q').defer();
+            ctrl.validateAliasRemote(defer.promise);
+            defer.reject({errcode: 500});
+            scope.$digest();
+            expect(scope.alias_error).toBe(true);
+            expect(scope.alias_error_message)
+                .toEqual('Something wrong with the server');
+        });
     });
 });

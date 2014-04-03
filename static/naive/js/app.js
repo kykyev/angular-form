@@ -30,9 +30,9 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
 
     $s.alias_http_stream = StreamService.instance();
 
-//        $s.submit = function () {
-//            alert("!!!");
-//        };
+//    $s.submit = function () {
+//        alert("!!!");
+//    };
 
     $s.validateName = function () {
         $s.name_pristine = false;
@@ -52,7 +52,7 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
         self.validateAliasLocally();
         if (!$s.alias_error) {
             self.validateAliasRemote(
-                $s.alias_http_stream.request('/alias/' + $s.alias));
+                $s.alias_http_stream.request('/api/hero/find-by-alias/' + $s.alias));
         } else {
             $s.alias_validating_now = false;
         }
@@ -76,7 +76,14 @@ angular.module('myApp').controller('FormCtrl', function ($scope, StreamService) 
                 } else {
                     $s.alias_error = false;
                 }
-            }, function (err) {}
+            }, function (err) {
+                $s.alias_error = true;
+                if (err.errcode === 500) {
+                    $s.alias_error_message = "Something wrong with the server";
+                } else {
+                    $s.alias_error_message = "Server error: " + err.errcode;
+                }
+            }
         ).finally(function () {
             $s.alias_validating_now = false;
         });
