@@ -1,7 +1,7 @@
 #
 import time
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, abort
 from wtforms import Form, StringField, validators
 
 
@@ -22,24 +22,35 @@ class MyFlask(Flask):
 app = MyFlask(__name__)
 
 
+@app.errorhandler(404)
+def page_not_found(err):
+    return jsonify(errcode=404), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(err):
+    return jsonify(errcode=500), 500
+
+
 @app.route('/', methods=['GET'])
 def hello_world():
     return app.send_static_file('index.html')
 
 
-@app.route('/process-form', methods=['POST'])
+@app.route('/api/hero/create', methods=['POST'])
 def process_form():
     form = HeroForm(request.form)
     form.validate()
 
 
-@app.route('/alias/<alias>')
+@app.route('/api/hero/find-by-alias/<alias>')
 def get_alias(alias):
-    time.sleep(1)
+    time.sleep(0.2)
+    if alias == 'evilmonk500':
+        abort(500)
     if alias in ('bear', 'donkey', 'parrot'):
         return jsonify(alias=alias, found=True)
-    else:
-        return jsonify(alias=alias, found=False)
+    return jsonify(alias=alias, found=False)
 
 
 class HeroForm(Form):
