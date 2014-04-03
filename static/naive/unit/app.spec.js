@@ -1,4 +1,4 @@
-/*global jasmine, describe, it, before, beforeEach, after, afterEach, expect, module, inject */
+/*global jasmine, describe, it, before, beforeEach, after, afterEach, expect, spyOn, module, inject */
 
 "use strict";
 
@@ -92,6 +92,20 @@ describe("FormCtrl", function() {
             expect(scope.alias_error).toBe(true);
             expect(scope.alias_error_message)
                 .toEqual('Something wrong with the server');
+        });
+    });
+
+    describe("alias validation", function () {
+        it("call to /api/hero/find-by-alias/{{alias}}", function () {
+            var promise = jasmine.createSpyObj('promise', ['then']);
+            promise.then.andCallFake(function() {
+                return jasmine.createSpyObj('promise', ['finally']);
+            });
+            spyOn(scope.alias_http_stream, 'request').andReturn(promise);
+            scope.alias = 'batman';
+            scope.validateAlias();
+            expect(scope.alias_http_stream.request)
+                .toHaveBeenCalledWith("/api/hero/find-by-alias/batman");
         });
     });
 });
